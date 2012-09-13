@@ -2,6 +2,7 @@
 .code {
     background-color: #eee;
     border: 1px #aaa solid;
+    margin-bottom: 10px;
 }
 
 .code pre {

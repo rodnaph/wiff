@@ -20,10 +20,10 @@
     (submit-button {:class "btn btn-primary"} "Compare")))
 
 (defn- line-type [line]
-  (cond
-    (re-matches #"^\+.*" line) :pre.add
-    (re-matches #"^-.*" line) :pre.remove
-    :else :pre))
+  (condp = (first line)
+    \+ :pre.add
+    \- :pre.remove
+    :pre))
 
 (defn- html-escape [line]
   (-> line
