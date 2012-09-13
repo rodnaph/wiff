@@ -43,9 +43,10 @@
   (let [files (jiff-seq {:vcs :svn
                          :from url1
                          :to url2})]
-    [:div.row
-      [:div.span12
-        (map to-file-diff files)]]))
+    (if (and url1 url2)
+        [:div.row
+          [:div.span12
+            (map to-file-diff files)]])))
 
 ;; Public
 ;; ------
