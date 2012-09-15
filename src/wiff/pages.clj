@@ -4,14 +4,16 @@
         hiccup.form
         jiff.vcs)
   (:require jiff.svn
-            (hiccup [page :as page])
+            (hiccup [util :as util]
+                    [page :as page])
             [clojure.string :as string]))
 
 (defn- url-row [text id value]
   [:div.control-group
     [:label.control-label text]
     [:div.controls
-      (text-field {:value value} id)]])
+      (text-field {:value value 
+                   :placeholder "Enter URL..."} id)]])
 
 (defn- url-form [{:keys [url1 url2]}]
   (form-to {:class "form-horizontal"} [:get "/"]
@@ -25,25 +27,18 @@
     \- :pre.remove
     :pre))
 
-(defn- html-escape [line]
-  (-> line
-      (string/replace #"<" "&lt;")
-      (string/replace #">" "&gt;")))
-
-(defn- to-line [line]
-  [(line-type line) (html-escape line)])
-
 (defn- to-file-diff [file]
   [:div
     [:h3 (:path file)]
     [:div.code
-      (map to-line (:lines file))]])
+      (map #(vector (line-type %) (util/escape-html %))
+            (:lines file))]])
 
 (defn- diff-view [{:keys [url1 url2]}]
-  (let [files (jiff-seq {:vcs :svn
-                         :from url1
-                         :to url2})]
-    (if (and url1 url2)
+  (if (and url1 url2)
+    (let [files (jiff-seq {:vcs :svn
+                           :from url1
+                           :to url2})]
         [:div.row
           [:div.span12
             (map to-file-diff files)]])))
